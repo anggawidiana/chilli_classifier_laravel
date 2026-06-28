@@ -173,20 +173,17 @@ export default function Welcome() {
                             <DiseaseCard
                                 image={PRODUCT_HEALTHY}
                                 title="Healthy"
-                                subtitle="Strong, vibrant leaves showing no signs of disease."
-                                tags={['Optimal', 'Low Risk']}
+                                subtitle="Strong, vibrant green leaves with smooth surface and no visible spots, curling, or discoloration — an indicator of optimal plant health, balanced nutrition, and a low risk of yield loss."
                             />
                             <DiseaseCard
                                 image={PRODUCT_CURL}
                                 title="Curl Virus"
-                                subtitle="Curled and deformed leaves caused by viral infection."
-                                tags={['Viral', 'Severe']}
+                                subtitle="A viral infection that causes leaves to curl, shrink, and deform — usually spread by whiteflies. Early detection helps prevent severe stunting and a significant drop in chilli production across the field."
                             />
                             <DiseaseCard
                                 image={PRODUCT_BACTERIAL}
                                 title="Bacterial Spot"
-                                subtitle="Dark lesions on leaves caused by bacterial infection."
-                                tags={['Bacterial', 'Treatable']}
+                                subtitle="Caused by Xanthomonas bacteria, producing dark water-soaked lesions on leaves and fruits. Spreads quickly in warm, humid conditions and can be controlled when detected and treated at an early stage."
                             />
                         </div>
 
@@ -432,35 +429,25 @@ function DiseaseCard({
     image,
     title,
     subtitle,
-    tags,
 }: {
     image: string;
     title: string;
     subtitle: string;
-    tags: string[];
 }) {
     return (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
             <div
-                className="h-44 w-full bg-cover bg-center"
+                className="h-44 w-full flex-none bg-cover bg-center"
                 style={{ backgroundImage: `url('${image}')` }}
             />
-            <div className="p-5">
+            <div className="flex flex-1 flex-col p-7">
                 <h3 className="text-lg font-semibold text-[#1b1b18]">{title}</h3>
-                <p className="mt-1 text-xs text-[#5b5b58]">{subtitle}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {tags.map((t) => (
-                        <span
-                            key={t}
-                            className="rounded-full bg-green-100 px-2.5 py-1 text-[10px] font-medium text-green-700"
-                        >
-                            {t}
-                        </span>
-                    ))}
+                <p className="mt-3 text-sm leading-relaxed text-[#5b5b58]">{subtitle}</p>
+                <div className="mt-auto pt-8">
+                    <button className="w-full rounded-full bg-[#1b1b18] py-2.5 text-xs font-semibold text-white hover:bg-black">
+                        Get A Scan
+                    </button>
                 </div>
-                <button className="mt-5 w-full rounded-full bg-[#1b1b18] py-2 text-xs font-semibold text-white hover:bg-black">
-                    Get A Scan
-                </button>
             </div>
         </div>
     );

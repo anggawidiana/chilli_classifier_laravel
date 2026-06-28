@@ -360,7 +360,7 @@ export default function Welcome() {
                 {/* ============== FOOTER ============== */}
                 <footer id="contact" className="relative overflow-hidden bg-[#0a0a0a] text-white">
                     <div className="mx-auto max-w-7xl px-6 pt-20 pb-10 lg:px-10">
-                        <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr]">
+                        <div className="grid gap-10 lg:grid-cols-[1fr_auto_auto] lg:gap-x-20">
                             <div>
                                 <div className="flex items-center gap-2">
                                     <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />

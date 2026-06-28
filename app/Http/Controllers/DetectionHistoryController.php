@@ -34,4 +34,30 @@ class DetectionHistoryController extends Controller
 
         return redirect()->back()->with('success', 'Riwayat deteksi berhasil disimpan.');
     }
+
+    /**
+     * Update the specified detection history in storage.
+     */
+    public function update(Request $request, DetectionHistory $history)
+    {
+        $validated = $request->validate([
+            'predicted_class'  => 'required|string|max:255',
+            'confidence'       => 'required|numeric|between:0,100',
+            'severity_percent' => 'required|numeric|between:0,100',
+        ]);
+
+        $history->update($validated);
+
+        return redirect()->back()->with('success', 'Riwayat deteksi berhasil diperbarui.');
+    }
+
+    /**
+     * Remove the specified detection history from storage.
+     */
+    public function destroy(DetectionHistory $history)
+    {
+        $history->delete();
+
+        return redirect()->back()->with('success', 'Riwayat deteksi berhasil dihapus.');
+    }
 }

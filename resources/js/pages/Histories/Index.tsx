@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Pencil, Trash2, UploadCloud, Loader2 } from 'lucide-react';
+import { Pencil, Trash2, UploadCloud, Loader2, Eye, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,7 @@ interface DetectionHistory {
     predicted_class: string;
     confidence: number;
     severity_percent: number;
+    image_path: string | null;
     created_at: string;
 }
 
@@ -64,6 +65,9 @@ export default function Index({ histories }: Props) {
             onFinish: () => setBulkDeleteLoading(false),
         });
     };
+
+    // ── detail ───────────────────────────────────────────────────────────────
+    const [detailTarget, setDetailTarget] = useState<DetectionHistory | null>(null);
 
     // ── single delete ──────────────────────────────────────────────────────────
     const [deleteTarget, setDeleteTarget] = useState<DetectionHistory | null>(null);
@@ -123,10 +127,12 @@ export default function Index({ histories }: Props) {
             const res = await fetch(apiUrl, { method: 'POST', body: formData });
             if (!res.ok) throw new Error('Gagal terhubung ke API Deteksi');
             const data: PredictionResult = await res.json();
-            router.patch(`/histories/${updateTarget.id}`, {
+            router.post(`/histories/${updateTarget.id}`, {
+                _method: 'patch',
                 predicted_class: data.predicted_class,
                 confidence: data.confidence,
                 severity_percent: data.severity_percent,
+                image: updateFile,
             }, {
                 preserveScroll: true,
                 onSuccess: () => closeUpdateModal(),
@@ -238,6 +244,15 @@ export default function Index({ histories }: Props) {
                                                         variant="outline"
                                                         size="icon"
                                                         className="h-8 w-8"
+                                                        onClick={() => setDetailTarget(history)}
+                                                        title="Lihat detail"
+                                                    >
+                                                        <Eye className="h-3.5 w-3.5" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-8 w-8"
                                                         onClick={() => { setUpdateTarget(history); setUpdateFile(null); setUpdatePreviewUrl(null); setUpdateError(null); }}
                                                         title="Perbarui deteksi"
                                                     >
@@ -287,6 +302,55 @@ export default function Index({ histories }: Props) {
                         <Button variant="destructive" onClick={handleBulkDelete} disabled={bulkDeleteLoading}>
                             {bulkDeleteLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Menghapus...</> : `Hapus ${selectedIds.size} Data`}
                         </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* ── Detail modal ── */}
+            <Dialog open={!!detailTarget} onOpenChange={(open) => { if (!open) setDetailTarget(null); }}>
+                <DialogContent className="sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Detail Riwayat Deteksi</DialogTitle>
+                    </DialogHeader>
+                    {detailTarget && (
+                        <div className="flex flex-col gap-4">
+                            <div className="relative h-56 w-full overflow-hidden rounded-lg border border-sidebar-border shadow-sm flex items-center justify-center bg-muted/20">
+                                {detailTarget.image_path ? (
+                                    <img src={`/storage/${detailTarget.image_path}`} alt="Gambar Deteksi" className="h-full w-full object-contain" />
+                                ) : (
+                                    <div className="flex flex-col items-center text-muted-foreground">
+                                        <ImageIcon className="h-10 w-10 mb-2 opacity-50" />
+                                        <span className="text-sm">Tidak ada gambar</span>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="grid gap-3 text-sm rounded-lg border border-sidebar-border p-4 bg-background shadow-sm">
+                                <div className="grid grid-cols-3 border-b border-sidebar-border/50 pb-2">
+                                    <span className="text-muted-foreground">Prediksi Kelas</span>
+                                    <span className="col-span-2 font-medium capitalize text-primary">{detailTarget.predicted_class.replace('_', ' ')}</span>
+                                </div>
+                                <div className="grid grid-cols-3 border-b border-sidebar-border/50 pb-2">
+                                    <span className="text-muted-foreground">Akurasi</span>
+                                    <span className="col-span-2 font-medium">{(detailTarget.confidence * 100).toFixed(2)}%</span>
+                                </div>
+                                <div className="grid grid-cols-3 border-b border-sidebar-border/50 pb-2">
+                                    <span className="text-muted-foreground">Tingkat Keparahan</span>
+                                    <span className="col-span-2 font-medium text-destructive">{Number(detailTarget.severity_percent).toFixed(1)}%</span>
+                                </div>
+                                <div className="grid grid-cols-3">
+                                    <span className="text-muted-foreground">Tanggal</span>
+                                    <span className="col-span-2 font-medium">
+                                        {new Intl.DateTimeFormat('id-ID', {
+                                            dateStyle: 'long',
+                                            timeStyle: 'short',
+                                        }).format(new Date(detailTarget.created_at))}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setDetailTarget(null)}>Tutup</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

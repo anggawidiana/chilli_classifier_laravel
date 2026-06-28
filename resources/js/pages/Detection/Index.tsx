@@ -85,6 +85,7 @@ export default function Index({ histories }: Props) {
                 predicted_class: data.predicted_class,
                 confidence: data.confidence,
                 severity_percent: data.severity_percent,
+                image: file,
             }, {
                 preserveScroll: true,
                 preserveState: true,

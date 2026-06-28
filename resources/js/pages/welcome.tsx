@@ -372,7 +372,7 @@ export default function Welcome() {
                 {/* ============== FOOTER ============== */}
                 <footer id="contact" className="relative overflow-hidden bg-[#0a0a0a] text-white">
                     <div className="mx-auto max-w-7xl px-6 pt-20 pb-10 lg:px-10">
-                        <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
+                        <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr]">
                             <div>
                                 <div className="flex items-center gap-2">
                                     <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
@@ -391,9 +391,14 @@ export default function Welcome() {
                                 </div>
                             </div>
 
-                            <FooterCol title="Quick Links" items={['Home', 'Services', 'Our Tech', 'How It Works', 'Contact']} />
-                            <FooterCol title="Services" items={['Leaf Detection', 'Severity Score', 'Crop Monitoring', 'Risk Analysis', 'History Reports']} />
-                            <FooterCol title="Company" items={['About Us', 'Case Studies', 'Testimonials', 'Careers', 'Privacy Policy']} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-white">Classes</h4>
+                                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                                    {['Bacterial Spot', 'Cercospora Leaf Spot', 'Curl Virus', 'Healthy Leaf', 'Nutrition Deficiency', 'White Spot'].map((c) => (
+                                        <li key={c}>{c}</li>
+                                    ))}
+                                </ul>
+                            </div>
                             <div>
                                 <h4 className="text-sm font-semibold text-white">Contact Info</h4>
                                 <ul className="mt-4 space-y-2 text-sm text-white/70">

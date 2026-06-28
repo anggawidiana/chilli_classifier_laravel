@@ -3,10 +3,8 @@ import { dashboard, login, register } from '@/routes';
 import { Facebook, Instagram, Twitter, Youtube, Star, Leaf, Cpu, ScanLine, LineChart } from 'lucide-react';
 
 const HERO_IMG = '/hero-bg.jpg';
-const FARMER_IMG =
-    'https://images.unsplash.com/photo-1605664041152-4f2e9ec64b97?auto=format&fit=crop&w=900&q=80';
-const HARVEST_IMG =
-    'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=900&q=80';
+const FARMER_IMG = '/farmer.jpg';
+const HARVEST_IMG = '/harvest.jpg';
 const FIELD_VIDEO_IMG = '/explore-field.jpg';
 const CTA_BG_IMG = '/cta-bg.jpg';
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetectionHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DetectionHistoryController extends Controller
 {
@@ -23,7 +24,12 @@ class DetectionHistoryController extends Controller
             'predicted_class'  => 'required|string|max:255',
             'confidence'       => 'required|numeric|between:0,100',
             'severity_percent' => 'required|numeric|between:0,100',
+            'image'            => 'nullable|image|max:5120', // Max 5MB
         ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_path'] = $request->file('image')->store('detections', 'public');
+        }
 
         Auth::user()->detectionHistories()->create($validated);
 
@@ -37,7 +43,13 @@ class DetectionHistoryController extends Controller
             'ids.*' => 'integer',
         ]);
 
-        Auth::user()->detectionHistories()->whereIn('id', $validated['ids'])->delete();
+        $histories = Auth::user()->detectionHistories()->whereIn('id', $validated['ids'])->get();
+        foreach ($histories as $history) {
+            if ($history->image_path) {
+                Storage::disk('public')->delete($history->image_path);
+            }
+            $history->delete();
+        }
 
         return redirect()->back()->with('success', count($validated['ids']) . ' riwayat deteksi berhasil dihapus.');
     }
@@ -50,7 +62,15 @@ class DetectionHistoryController extends Controller
             'predicted_class'  => 'required|string|max:255',
             'confidence'       => 'required|numeric|between:0,100',
             'severity_percent' => 'required|numeric|between:0,100',
+            'image'            => 'nullable|image|max:5120',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($history->image_path) {
+                Storage::disk('public')->delete($history->image_path);
+            }
+            $validated['image_path'] = $request->file('image')->store('detections', 'public');
+        }
 
         $history->update($validated);
 
@@ -60,6 +80,10 @@ class DetectionHistoryController extends Controller
     public function destroy(DetectionHistory $history)
     {
         abort_unless($history->user_id === Auth::id(), 403);
+
+        if ($history->image_path) {
+            Storage::disk('public')->delete($history->image_path);
+        }
 
         $history->delete();
 

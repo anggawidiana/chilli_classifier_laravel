@@ -12,6 +12,7 @@ class DetectionHistory extends Model
         'predicted_class',
         'confidence',
         'severity_percent',
+        'image_path',
     ];
 
     public function user(): BelongsTo

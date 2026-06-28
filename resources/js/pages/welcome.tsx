@@ -2,41 +2,28 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
 import { Facebook, Instagram, Twitter, Youtube, Star, Leaf, Cpu, ScanLine, LineChart } from 'lucide-react';
 
-const HERO_IMG =
-    'https://images.unsplash.com/photo-1583664620187-1a6e3a4e4ee6?auto=format&fit=crop&w=1600&q=80';
-const FARMER_IMG =
-    'https://images.unsplash.com/photo-1605664041152-4f2e9ec64b97?auto=format&fit=crop&w=900&q=80';
-const HARVEST_IMG =
-    'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=900&q=80';
-const FIELD_VIDEO_IMG =
-    'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80';
-const CTA_BG_IMG =
-    'https://images.unsplash.com/photo-1592982537447-6f2a6a0c8b1b?auto=format&fit=crop&w=1600&q=80';
+const HERO_IMG = '/hero-bg.jpg';
+const FARMER_IMG = '/farmer.jpg';
+const HARVEST_IMG = '/harvest.jpg';
+const FIELD_VIDEO_IMG = '/explore-field.jpg';
+const CTA_BG_IMG = '/cta-bg.jpg';
 
-const PRODUCT_HEALTHY =
-    'https://images.unsplash.com/photo-1583912267550-d973db52c44a?auto=format&fit=crop&w=600&q=80';
-const PRODUCT_CURL =
-    'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80';
-const PRODUCT_YELLOW =
-    'https://images.unsplash.com/photo-1606923829579-0cb981a83e2e?auto=format&fit=crop&w=600&q=80';
+const PRODUCT_HEALTHY = '/diseases/healthy.jpg';
+const PRODUCT_CURL = '/diseases/curl-virus.jpg';
+const PRODUCT_BACTERIAL = '/diseases/bacterial-spot.jpg';
 
-const TECH_1 =
-    'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=600&q=80';
-const TECH_2 =
-    'https://images.unsplash.com/photo-1592978322883-ff5b06bbb37b?auto=format&fit=crop&w=600&q=80';
-const TECH_3 =
-    'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=600&q=80';
-const TECH_4 =
-    'https://images.unsplash.com/photo-1561365452-adb940139ffa?auto=format&fit=crop&w=600&q=80';
+const TECH_1 = '/tech/tech-1.jpg';
+const TECH_2 = '/tech/tech-2.jpg';
+const TECH_3 = '/tech/tech-3.jpg';
+const TECH_4 = '/tech/tech-4.jpg';
 
 const AVATAR_1 = 'https://i.pravatar.cc/80?img=12';
-const AVATAR_2 = 'https://i.pravatar.cc/80?img=23';
-const AVATAR_3 = 'https://i.pravatar.cc/80?img=34';
-const AVATAR_4 = 'https://i.pravatar.cc/80?img=45';
-const AVATAR_5 = 'https://i.pravatar.cc/80?img=56';
-const AVATAR_6 = 'https://i.pravatar.cc/80?img=67';
+const AVATAR_2 = 'https://i.pravatar.cc/80?img=13';
+const AVATAR_3 = 'https://i.pravatar.cc/80?img=14';
+const AVATAR_4 = 'https://i.pravatar.cc/80?img=15';
+const AVATAR_5 = 'https://i.pravatar.cc/80?img=33';
 
-const BRAND = 'CHILLICLASS';
+const BRAND = 'ChiliLab';
 
 export default function Welcome() {
     const { auth } = usePage().props;
@@ -53,21 +40,15 @@ export default function Welcome() {
                         className="absolute inset-0 bg-cover bg-center"
                         style={{ backgroundImage: `url('${HERO_IMG}')` }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-sky-200/30 via-transparent to-white/10" />
-
-                    {/* Giant brand text behind */}
-                    <div className="pointer-events-none absolute inset-x-0 top-24 z-0 flex justify-center">
-                        <h2 className="select-none text-[18vw] leading-none font-extrabold tracking-tight text-white/85 drop-shadow-sm">
-                            {BRAND}
-                        </h2>
-                    </div>
+                    {/* Top fade for nav legibility + bottom fade for content legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/60" />
 
                     {/* Header */}
-                    <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+                    <header className="relative z-30 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
                         <div className="flex items-center gap-2">
                             <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
                             <span className="text-lg font-bold tracking-wide text-white">
-                                CHILLICLASS
+                                ChiliLab
                             </span>
                         </div>
 
@@ -96,16 +77,25 @@ export default function Welcome() {
                         )}
                     </header>
 
-                    {/* Hero content */}
-                    <div className="relative z-10 mx-auto max-w-7xl px-6 pt-40 pb-32 lg:px-10 lg:pt-56 lg:pb-44">
-                        <div className="grid gap-10 lg:grid-cols-3 lg:items-end">
-                            <h1 className="col-span-2 max-w-3xl text-4xl leading-[1.05] font-bold text-white drop-shadow-md sm:text-5xl lg:text-6xl">
-                                Smart Chilli Disease Detection Powered by AI.
+                    {/* Giant brand text — sits in the upper half, between header and content */}
+                    <div className="pointer-events-none relative z-10 mx-auto mt-4 flex max-w-7xl px-6 lg:px-10">
+                        <h2 className="select-none whitespace-nowrap text-[14vw] leading-[0.85] font-extrabold tracking-tight text-white/90 drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
+                            {BRAND}
+                        </h2>
+                    </div>
+
+                    {/* Hero content — sits at the bottom of the hero */}
+                    <div className="relative z-20 mx-auto max-w-7xl px-6 pt-20 pb-20 lg:px-10 lg:pt-32 lg:pb-28">
+                        <div className="grid items-end gap-10 lg:grid-cols-2">
+                            <h1 className="max-w-2xl text-4xl leading-[1.05] font-bold text-white drop-shadow-md sm:text-5xl lg:text-6xl">
+                                Smart Chilli Disease
+                                <br />
+                                Detection Powered by AI.
                             </h1>
-                            <div className="flex flex-col gap-6 text-white">
+                            <div className="flex flex-col gap-6 lg:items-start lg:pl-6">
                                 <p className="max-w-md text-base leading-relaxed text-white drop-shadow">
-                                    CHILLICLASS combines deep learning and modern computer vision to
-                                    identify chilli leaf diseases in seconds — giving farmers
+                                    ChiliLab combines deep learning and modern computer vision
+                                    to identify chilli leaf diseases in seconds — giving farmers
                                     healthier crops, smarter decisions, and bigger harvests.
                                 </p>
                                 <Link
@@ -130,7 +120,7 @@ export default function Welcome() {
                                     Through Smart AI Detection
                                 </h2>
                                 <p className="mt-6 max-w-xl text-sm leading-relaxed text-[#5b5b58]">
-                                    At CHILLICLASS, we combine convolutional neural networks,
+                                    At ChiliLab, we combine convolutional neural networks,
                                     image-based leaf analysis, and real-time severity scoring to
                                     detect chilli diseases instantly — without lab tests. From
                                     early-stage symptoms to advanced infections, every prediction
@@ -166,7 +156,7 @@ export default function Welcome() {
                 </section>
 
                 {/* ============== DISEASES WE DETECT ============== */}
-                <section id="diseases" className="bg-rose-50/60">
+                <section id="diseases" className="bg-green-50/70">
                     <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
                         <div className="mx-auto max-w-xl text-center">
                             <h2 className="text-3xl font-bold text-[#1b1b18] sm:text-4xl">
@@ -183,31 +173,20 @@ export default function Welcome() {
                             <DiseaseCard
                                 image={PRODUCT_HEALTHY}
                                 title="Healthy"
-                                subtitle="Strong, vibrant leaves showing no signs of disease."
-                                tags={['Optimal', 'Low Risk']}
+                                subtitle="Strong, vibrant green leaves with smooth surface and no visible spots, curling, or discoloration — an indicator of optimal plant health, balanced nutrition, and a low risk of yield loss."
                             />
                             <DiseaseCard
                                 image={PRODUCT_CURL}
-                                title="Leaf Curl"
-                                subtitle="Curled and deformed leaves caused by viral infection."
-                                tags={['Common', 'Treatable']}
+                                title="Curl Virus"
+                                subtitle="A viral infection that causes leaves to curl, shrink, and deform — usually spread by whiteflies. Early detection helps prevent severe stunting and a significant drop in chilli production across the field."
                             />
                             <DiseaseCard
-                                image={PRODUCT_YELLOW}
-                                title="Yellowish"
-                                subtitle="Yellowing leaves indicating nutrient or viral stress."
-                                tags={['Early Sign', 'Monitor']}
+                                image={PRODUCT_BACTERIAL}
+                                title="Bacterial Spot"
+                                subtitle="Caused by Xanthomonas bacteria, producing dark water-soaked lesions on leaves and fruits. Spreads quickly in warm, humid conditions and can be controlled when detected and treated at an early stage."
                             />
                         </div>
 
-                        <div className="mt-12 flex justify-center">
-                            <Link
-                                href={auth.user ? dashboard() : register()}
-                                className="rounded-full bg-[#1b1b18] px-8 py-3 text-sm font-semibold text-white hover:bg-black"
-                            >
-                                Scan a Leaf Now
-                            </Link>
-                        </div>
                     </div>
                 </section>
 
@@ -228,7 +207,7 @@ export default function Welcome() {
                             />
                             <TabBlock
                                 title="Learn the Tech"
-                                body="Discover the convolutional neural network behind CHILLICLASS — and how transfer learning powers fast, accurate disease detection."
+                                body="Discover the convolutional neural network behind ChiliLab — and how transfer learning powers fast, accurate disease detection."
                             />
                             <TabBlock
                                 title="Meet the Team"
@@ -236,14 +215,6 @@ export default function Welcome() {
                             />
                         </div>
 
-                        <div className="mt-12 flex justify-center">
-                            <Link
-                                href="#contact"
-                                className="rounded-full border border-[#1b1b18] px-8 py-3 text-sm font-semibold text-[#1b1b18] hover:bg-[#1b1b18] hover:text-white"
-                            >
-                                Schedule a Farm Visit
-                            </Link>
-                        </div>
                     </div>
                 </section>
 
@@ -257,7 +228,7 @@ export default function Welcome() {
                                 AI Innovation
                             </h2>
                             <p className="mt-4 text-sm text-[#5b5b58]">
-                                CHILLICLASS uses advanced deep learning models and modern image
+                                ChiliLab uses advanced deep learning models and modern image
                                 pipelines to improve crop health, reduce loss, and boost
                                 productivity for farmers everywhere.
                             </p>
@@ -302,14 +273,6 @@ export default function Welcome() {
                             />
                         </div>
 
-                        <div className="mt-12 flex justify-center">
-                            <Link
-                                href={auth.user ? dashboard() : login()}
-                                className="rounded-full bg-[#1b1b18] px-8 py-3 text-sm font-semibold text-white hover:bg-black"
-                            >
-                                Explore Our Technology
-                            </Link>
-                        </div>
                     </div>
                 </section>
 
@@ -323,50 +286,36 @@ export default function Welcome() {
                         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             <Testimonial
                                 avatar={AVATAR_1}
-                                name="DANIEL CARTER"
+                                name="EDGAR"
                                 role="Chilli Grower"
-                                body="Detection is instant and surprisingly accurate. I now scan my whole field every morning before sunrise."
+                                body="Detection is instant and surprisingly accurate. I scan my whole field every morning before sunrise."
                             />
                             <Testimonial
                                 avatar={AVATAR_2}
-                                name="JAMES WILLIAM CARTER"
+                                name="EDWIN"
                                 role="Smallholder Farmer"
-                                body="The online process is simple — and the results are matched by what an agronomist confirmed days later."
+                                body="The process is simple and the predictions match what an agronomist confirmed days later."
                             />
                             <Testimonial
                                 avatar={AVATAR_3}
-                                name="CHRISTOPHER J. BENNETT"
+                                name="SINDU"
                                 role="Agritech Engineer"
-                                body="Our yields are noticeably more consistent because we catch leaf disease early. CHILLICLASS pays for itself."
+                                body="Our yields are noticeably more consistent because we catch leaf disease early. ChiliLab pays for itself."
                             />
                             <Testimonial
                                 avatar={AVATAR_4}
-                                name="SAMUEL JOSEPH ORTEGA"
+                                name="ANGGA"
                                 role="Farm Manager"
-                                body="I've tried many tools. CHILLICLASS's consistency and transparency are unmatched. My team keeps coming back."
+                                body="I've tried many tools. ChiliLab's consistency and transparency are unmatched. My team keeps using it."
                             />
                             <Testimonial
                                 avatar={AVATAR_5}
-                                name="ANDREW THOMAS MITCHELL"
+                                name="MATIUS"
                                 role="Crop Researcher"
-                                body="Touring the platform was inspiring. Seeing the model and pipeline in action gave me ideas for my own garden."
-                            />
-                            <Testimonial
-                                avatar={AVATAR_6}
-                                name="RAJESH KUMAR SHARMA"
-                                role="Independent Farmer"
-                                body="Visiting CHILLICLASS helped me understand how AI really works to make smart, early-stage detection so easy."
+                                body="Seeing the model and pipeline in action gave me real ideas for improving my own farming workflow."
                             />
                         </div>
 
-                        <div className="mt-12 flex justify-center">
-                            <Link
-                                href={auth.user ? dashboard() : register()}
-                                className="rounded-full border border-[#1b1b18] px-8 py-3 text-sm font-semibold text-[#1b1b18] hover:bg-[#1b1b18] hover:text-white"
-                            >
-                                Share Your Story
-                            </Link>
-                        </div>
                     </div>
                 </section>
 
@@ -406,11 +355,11 @@ export default function Welcome() {
                 {/* ============== FOOTER ============== */}
                 <footer id="contact" className="relative overflow-hidden bg-[#0a0a0a] text-white">
                     <div className="mx-auto max-w-7xl px-6 pt-20 pb-10 lg:px-10">
-                        <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
+                        <div className="grid gap-10 lg:grid-cols-[1fr_auto_auto] lg:gap-x-20">
                             <div>
                                 <div className="flex items-center gap-2">
                                     <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
-                                    <span className="text-lg font-bold tracking-wide">CHILLICLASS</span>
+                                    <span className="text-lg font-bold tracking-wide">ChiliLab</span>
                                 </div>
                                 <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
                                     Smart chilli disease detection powered by deep learning. We help
@@ -425,22 +374,27 @@ export default function Welcome() {
                                 </div>
                             </div>
 
-                            <FooterCol title="Quick Links" items={['Home', 'Services', 'Our Tech', 'How It Works', 'Contact']} />
-                            <FooterCol title="Services" items={['Leaf Detection', 'Severity Score', 'Crop Monitoring', 'Risk Analysis', 'History Reports']} />
-                            <FooterCol title="Company" items={['About Us', 'Case Studies', 'Testimonials', 'Careers', 'Privacy Policy']} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-white">Classes</h4>
+                                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                                    {['Bacterial Spot', 'Cercospora Leaf Spot', 'Curl Virus', 'Healthy Leaf', 'Nutrition Deficiency', 'White Spot'].map((c) => (
+                                        <li key={c}>{c}</li>
+                                    ))}
+                                </ul>
+                            </div>
                             <div>
                                 <h4 className="text-sm font-semibold text-white">Contact Info</h4>
                                 <ul className="mt-4 space-y-2 text-sm text-white/70">
                                     <li>Singaraja, Bali, Indonesia</li>
                                     <li>+62 813 0000 0000</li>
                                     <li>08.00 AM – 18.00 PM</li>
-                                    <li>support@chilliclass.id</li>
+                                    <li>support@chililab.id</li>
                                 </ul>
                             </div>
                         </div>
 
                         <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50">
-                            <span>© {new Date().getFullYear()} CHILLICLASS. All rights reserved.</span>
+                            <span>© {new Date().getFullYear()} ChiliLab. All rights reserved.</span>
                             <div className="flex gap-6">
                                 <a href="#" className="hover:text-white">Privacy Policy</a>
                                 <a href="#" className="hover:text-white">Terms &amp; Conditions</a>
@@ -475,35 +429,25 @@ function DiseaseCard({
     image,
     title,
     subtitle,
-    tags,
 }: {
     image: string;
     title: string;
     subtitle: string;
-    tags: string[];
 }) {
     return (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
             <div
-                className="h-44 w-full bg-cover bg-center"
+                className="h-44 w-full flex-none bg-cover bg-center"
                 style={{ backgroundImage: `url('${image}')` }}
             />
-            <div className="p-5">
+            <div className="flex flex-1 flex-col p-7">
                 <h3 className="text-lg font-semibold text-[#1b1b18]">{title}</h3>
-                <p className="mt-1 text-xs text-[#5b5b58]">{subtitle}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {tags.map((t) => (
-                        <span
-                            key={t}
-                            className="rounded-full bg-rose-100/80 px-2.5 py-1 text-[10px] font-medium text-rose-700"
-                        >
-                            {t}
-                        </span>
-                    ))}
+                <p className="mt-3 text-sm leading-relaxed text-[#5b5b58]">{subtitle}</p>
+                <div className="mt-auto pt-8">
+                    <button className="w-full rounded-full bg-[#1b1b18] py-2.5 text-xs font-semibold text-white hover:bg-black">
+                        Get A Scan
+                    </button>
                 </div>
-                <button className="mt-5 w-full rounded-full bg-[#1b1b18] py-2 text-xs font-semibold text-white hover:bg-black">
-                    Get A Scan
-                </button>
             </div>
         </div>
     );
@@ -537,7 +481,7 @@ function FeatureCard({
             <ul className="mt-3 space-y-1.5 text-xs text-[#5b5b58]">
                 {bullets.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                        <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-rose-500" />
+                        <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-green-500" />
                         <span>{b}</span>
                     </li>
                 ))}

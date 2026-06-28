@@ -21,11 +21,10 @@ const TECH_3 = '/tech/tech-3.jpg';
 const TECH_4 = '/tech/tech-4.jpg';
 
 const AVATAR_1 = 'https://i.pravatar.cc/80?img=12';
-const AVATAR_2 = 'https://i.pravatar.cc/80?img=23';
-const AVATAR_3 = 'https://i.pravatar.cc/80?img=34';
-const AVATAR_4 = 'https://i.pravatar.cc/80?img=45';
-const AVATAR_5 = 'https://i.pravatar.cc/80?img=56';
-const AVATAR_6 = 'https://i.pravatar.cc/80?img=67';
+const AVATAR_2 = 'https://i.pravatar.cc/80?img=13';
+const AVATAR_3 = 'https://i.pravatar.cc/80?img=14';
+const AVATAR_4 = 'https://i.pravatar.cc/80?img=15';
+const AVATAR_5 = 'https://i.pravatar.cc/80?img=33';
 
 const BRAND = 'ChiliLab';
 
@@ -293,39 +292,33 @@ export default function Welcome() {
                         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             <Testimonial
                                 avatar={AVATAR_1}
-                                name="DANIEL CARTER"
+                                name="EDGAR"
                                 role="Chilli Grower"
-                                body="Detection is instant and surprisingly accurate. I now scan my whole field every morning before sunrise."
+                                body="Detection is instant and surprisingly accurate. I scan my whole field every morning before sunrise."
                             />
                             <Testimonial
                                 avatar={AVATAR_2}
-                                name="JAMES WILLIAM CARTER"
+                                name="EDWIN"
                                 role="Smallholder Farmer"
-                                body="The online process is simple — and the results are matched by what an agronomist confirmed days later."
+                                body="The process is simple and the predictions match what an agronomist confirmed days later."
                             />
                             <Testimonial
                                 avatar={AVATAR_3}
-                                name="CHRISTOPHER J. BENNETT"
+                                name="SINDU"
                                 role="Agritech Engineer"
                                 body="Our yields are noticeably more consistent because we catch leaf disease early. ChiliLab pays for itself."
                             />
                             <Testimonial
                                 avatar={AVATAR_4}
-                                name="SAMUEL JOSEPH ORTEGA"
+                                name="ANGGA"
                                 role="Farm Manager"
-                                body="I've tried many tools. ChiliLab's consistency and transparency are unmatched. My team keeps coming back."
+                                body="I've tried many tools. ChiliLab's consistency and transparency are unmatched. My team keeps using it."
                             />
                             <Testimonial
                                 avatar={AVATAR_5}
-                                name="ANDREW THOMAS MITCHELL"
+                                name="MATIUS"
                                 role="Crop Researcher"
-                                body="Touring the platform was inspiring. Seeing the model and pipeline in action gave me ideas for my own garden."
-                            />
-                            <Testimonial
-                                avatar={AVATAR_6}
-                                name="RAJESH KUMAR SHARMA"
-                                role="Independent Farmer"
-                                body="Visiting ChiliLab helped me understand how AI really works to make smart, early-stage detection so easy."
+                                body="Seeing the model and pipeline in action gave me real ideas for improving my own farming workflow."
                             />
                         </div>
 

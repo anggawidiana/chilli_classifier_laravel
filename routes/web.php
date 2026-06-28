@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DetectionController;
 use App\Http\Controllers\DetectionHistoryController;
 
 
@@ -9,7 +10,7 @@ Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
-    Route::inertia('/detection', 'Detection/Index')->name('detection.index');
+    Route::get('/detection', [DetectionController::class, 'index'])->name('detection.index');
     Route::get('/histories', [DetectionHistoryController::class, 'index'])->name('histories.index');
     Route::post('/histories', [DetectionHistoryController::class, 'store'])->name('histories.store');
     Route::post('/histories/bulk-delete', [DetectionHistoryController::class, 'bulkDestroy'])->name('histories.bulk-destroy');

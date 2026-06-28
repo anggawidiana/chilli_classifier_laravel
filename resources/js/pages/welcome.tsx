@@ -159,7 +159,7 @@ export default function Welcome() {
                 </section>
 
                 {/* ============== DISEASES WE DETECT ============== */}
-                <section id="diseases" className="bg-sky-50/70">
+                <section id="diseases" className="bg-green-50/70">
                     <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
                         <div className="mx-auto max-w-xl text-center">
                             <h2 className="text-3xl font-bold text-[#1b1b18] sm:text-4xl">
@@ -455,7 +455,7 @@ function DiseaseCard({
                     {tags.map((t) => (
                         <span
                             key={t}
-                            className="rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-medium text-sky-700"
+                            className="rounded-full bg-green-100 px-2.5 py-1 text-[10px] font-medium text-green-700"
                         >
                             {t}
                         </span>
@@ -497,7 +497,7 @@ function FeatureCard({
             <ul className="mt-3 space-y-1.5 text-xs text-[#5b5b58]">
                 {bullets.map((b) => (
                     <li key={b} className="flex items-start gap-2">
-                        <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-sky-500" />
+                        <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-green-500" />
                         <span>{b}</span>
                     </li>
                 ))}

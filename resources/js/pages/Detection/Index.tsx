@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { UploadCloud, ImageIcon, Loader2 } from 'lucide-react';
+import { UploadCloud, ImageIcon, Loader2, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 interface PredictionResult {
     predicted_class: string;
@@ -13,7 +12,19 @@ interface PredictionResult {
     probabilities: Record<string, number>;
 }
 
-export default function Index() {
+interface DetectionHistory {
+    id: number;
+    predicted_class: string;
+    confidence: number;
+    severity_percent: number;
+    created_at: string;
+}
+
+interface Props {
+    histories: DetectionHistory[];
+}
+
+export default function Index({ histories }: Props) {
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -45,10 +56,6 @@ export default function Index() {
         }
     };
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
-
     const handleDetect = async () => {
         if (!file) {
             setError('Silakan pilih gambar terlebih dahulu.');
@@ -69,26 +76,24 @@ export default function Index() {
                 body: formData,
             });
 
-            if (!response.ok) {
-                throw new Error('Gagal terhubung ke API Deteksi');
-            }
+            if (!response.ok) throw new Error('Gagal terhubung ke API Deteksi');
 
             const data: PredictionResult = await response.json();
             setResult(data);
 
-            // Simpan riwayat deteksi ke database
             router.post('/histories', {
                 predicted_class: data.predicted_class,
-                confidence: data.confidence, // Bisa dalam bentuk desimal 0-1 (misal 0.93) yang akan sesuai dengan validasi between:0,100
+                confidence: data.confidence,
                 severity_percent: data.severity_percent,
             }, {
                 preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => {
-                    // Berhasil disimpan ke riwayat
+                    router.reload({ only: ['histories'] });
                 },
                 onError: (errors) => {
                     console.error('Gagal menyimpan riwayat:', errors);
-                }
+                },
             });
 
         } catch (err: any) {
@@ -110,7 +115,7 @@ export default function Index() {
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
-                    {/* Kolom Upload */}
+                    {/* Upload */}
                     <Card>
                         <CardHeader>
                             <CardTitle>Unggah Gambar</CardTitle>
@@ -119,28 +124,24 @@ export default function Index() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div 
+                            <div
                                 className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-sidebar-border/70 p-12 text-center hover:bg-muted/20 transition-colors ${file ? 'bg-muted/10 border-primary/50' : 'bg-background'}`}
                                 onDrop={handleDrop}
-                                onDragOver={handleDragOver}
+                                onDragOver={(e) => e.preventDefault()}
                             >
-                                <Input 
-                                    id="image-upload" 
-                                    type="file" 
-                                    accept="image/*" 
+                                <Input
+                                    id="image-upload"
+                                    type="file"
+                                    accept="image/*"
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     onChange={handleFileChange}
                                     disabled={loading}
                                 />
-                                
+
                                 {previewUrl ? (
                                     <div className="flex flex-col items-center gap-4">
                                         <div className="relative h-48 w-full max-w-sm overflow-hidden rounded-lg border border-sidebar-border shadow-sm">
-                                            <img 
-                                                src={previewUrl} 
-                                                alt="Preview" 
-                                                className="w-full h-full object-cover" 
-                                            />
+                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                                         </div>
                                         <p className="text-sm font-medium text-muted-foreground truncate max-w-[200px]">
                                             {file?.name}
@@ -160,22 +161,13 @@ export default function Index() {
                             </div>
 
                             {error && (
-                                <p className="mt-4 text-sm font-medium text-destructive">
-                                    {error}
-                                </p>
+                                <p className="mt-4 text-sm font-medium text-destructive">{error}</p>
                             )}
 
                             <div className="mt-6">
-                                <Button 
-                                    onClick={handleDetect} 
-                                    disabled={!file || loading}
-                                    className="w-full"
-                                >
+                                <Button onClick={handleDetect} disabled={!file || loading} className="w-full">
                                     {loading ? (
-                                        <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Menganalisis...
-                                        </>
+                                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Menganalisis...</>
                                     ) : (
                                         'Deteksi Penyakit'
                                     )}
@@ -184,13 +176,11 @@ export default function Index() {
                         </CardContent>
                     </Card>
 
-                    {/* Kolom Hasil */}
+                    {/* Result */}
                     <Card>
                         <CardHeader>
                             <CardTitle>Hasil Analisis</CardTitle>
-                            <CardDescription>
-                                Hasil deteksi dari model akan muncul di sini.
-                            </CardDescription>
+                            <CardDescription>Hasil deteksi dari model akan muncul di sini.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {!result && !loading ? (
@@ -216,49 +206,83 @@ export default function Index() {
                                     <div className="grid gap-4 sm:grid-cols-2">
                                         <div className="flex flex-col p-4 rounded-xl border border-sidebar-border/70 bg-background">
                                             <span className="text-sm text-muted-foreground mb-2">Akurasi / Confidence</span>
-                                            <div className="flex items-end gap-2">
-                                                <span className="text-2xl font-bold">{(result.confidence * 100).toFixed(1)}%</span>
-                                            </div>
+                                            <span className="text-2xl font-bold">{(result.confidence * 100).toFixed(1)}%</span>
                                             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-secondary">
-                                                <div 
-                                                    className="h-full bg-primary rounded-full transition-all duration-1000" 
-                                                    style={{ width: `${result.confidence * 100}%` }}
-                                                />
+                                                <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${result.confidence * 100}%` }} />
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col p-4 rounded-xl border border-sidebar-border/70 bg-background">
                                             <span className="text-sm text-muted-foreground mb-2">Tingkat Keparahan</span>
-                                            <div className="flex items-end gap-2">
-                                                <span className="text-2xl font-bold">{result.severity_percent.toFixed(1)}%</span>
-                                            </div>
+                                            <span className="text-2xl font-bold">{result.severity_percent.toFixed(1)}%</span>
                                             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-secondary">
-                                                <div 
-                                                    className="h-full bg-destructive rounded-full transition-all duration-1000" 
-                                                    style={{ width: `${result.severity_percent}%` }}
-                                                />
+                                                <div className="h-full bg-destructive rounded-full transition-all duration-1000" style={{ width: `${result.severity_percent}%` }} />
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div className="mt-2 text-sm text-center text-muted-foreground border-t border-sidebar-border/70 pt-4">
+
+                                    <p className="text-sm text-center text-muted-foreground border-t border-sidebar-border/70 pt-4">
                                         Hasil deteksi ini telah otomatis disimpan ke riwayat.
-                                    </div>
+                                    </p>
                                 </div>
                             ) : null}
                         </CardContent>
                     </Card>
                 </div>
+
+                {/* Recent history */}
+                {histories.length > 0 && (
+                    <Card>
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2">
+                                <History className="h-4 w-4 text-muted-foreground" />
+                                <CardTitle className="text-base">Riwayat Terakhir</CardTitle>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm whitespace-nowrap">
+                                    <thead className="bg-muted/50 text-muted-foreground border-y border-sidebar-border/70 dark:border-sidebar-border">
+                                        <tr>
+                                            <th className="px-4 py-2.5 font-medium">Tanggal</th>
+                                            <th className="px-4 py-2.5 font-medium">Prediksi</th>
+                                            <th className="px-4 py-2.5 font-medium">Akurasi</th>
+                                            <th className="px-4 py-2.5 font-medium">Keparahan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-sidebar-border/70 dark:divide-sidebar-border">
+                                        {histories.slice(0, 5).map((h) => (
+                                            <tr key={h.id} className="hover:bg-muted/40 transition-colors">
+                                                <td className="px-4 py-2.5 text-muted-foreground">
+                                                    {new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(h.created_at))}
+                                                </td>
+                                                <td className="px-4 py-2.5">
+                                                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary capitalize">
+                                                        {h.predicted_class.replace('_', ' ')}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-2.5">{Number(h.confidence * 100).toFixed(2)}%</td>
+                                                <td className="px-4 py-2.5">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
+                                                            <div className="h-full bg-destructive rounded-full" style={{ width: `${h.severity_percent}%` }} />
+                                                        </div>
+                                                        <span className="text-muted-foreground">{Number(h.severity_percent).toFixed(1)}%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </>
     );
 }
 
 Index.layout = {
-    breadcrumbs: [
-        {
-            title: 'Deteksi Penyakit',
-            href: '/detection',
-        },
-    ],
+    breadcrumbs: [{ title: 'Deteksi Penyakit', href: '/detection' }],
 };

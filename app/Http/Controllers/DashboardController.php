@@ -13,18 +13,20 @@ class DashboardController extends Controller
     public function index()
     {
         // 1. KPIs
-        $totalScans = DetectionHistory::count();
-        $averageConfidence = (DetectionHistory::avg('confidence') ?? 0) * 100;
-        $averageSeverity = DetectionHistory::where('severity_percent', '>', 0)->avg('severity_percent') ?? 0;
+        $totalScans = DetectionHistory::where('user_id', auth()->id())->count();
+        $averageConfidence = (DetectionHistory::where('user_id', auth()->id())->avg('confidence') ?? 0) * 100;
+        $averageSeverity = DetectionHistory::where('user_id', auth()->id())->where('severity_percent', '>', 0)->avg('severity_percent') ?? 0;
 
-        $mostCommonClassResult = DetectionHistory::select('predicted_class', DB::raw('count(*) as total'))
+        $mostCommonClassResult = DetectionHistory::where('user_id', auth()->id())
+            ->select('predicted_class', DB::raw('count(*) as total'))
             ->groupBy('predicted_class')
             ->orderByDesc('total')
             ->first();
         $mostCommonDisease = $mostCommonClassResult ? $mostCommonClassResult->predicted_class : 'None';
 
         // 2. Chart Data: Disease Distribution
-        $diseaseDistribution = DetectionHistory::select('predicted_class as name', DB::raw('count(*) as value'))
+        $diseaseDistribution = DetectionHistory::where('user_id', auth()->id())
+            ->select('predicted_class as name', DB::raw('count(*) as value'))
             ->groupBy('predicted_class')
             ->get()
             ->map(function ($item) {
@@ -35,7 +37,8 @@ class DashboardController extends Controller
             });
 
         // 3. Chart Data: Recent Activity (Last 7 Days)
-        $recentActivityRaw = DetectionHistory::select(
+        $recentActivityRaw = DetectionHistory::where('user_id', auth()->id())
+            ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('count(*) as scans')
             )
@@ -55,7 +58,8 @@ class DashboardController extends Controller
         }
 
         // 4. Recent Detections List
-        $latestDetections = DetectionHistory::orderBy('created_at', 'desc')
+        $latestDetections = DetectionHistory::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
             ->take(6)
             ->get()
             ->map(function ($history) {

@@ -36,6 +36,21 @@ class DetectionHistoryController extends Controller
     }
 
     /**
+     * Remove multiple detection histories from storage.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:detection_histories,id',
+        ]);
+
+        DetectionHistory::whereIn('id', $validated['ids'])->delete();
+
+        return redirect()->back()->with('success', count($validated['ids']) . ' riwayat deteksi berhasil dihapus.');
+    }
+
+    /**
      * Update the specified detection history in storage.
      */
     public function update(Request $request, DetectionHistory $history)

@@ -12,6 +12,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('/detection', 'Detection/Index')->name('detection.index');
     Route::get('/histories', [DetectionHistoryController::class, 'index'])->name('histories.index');
     Route::post('/histories', [DetectionHistoryController::class, 'store'])->name('histories.store');
+    Route::post('/histories/bulk-delete', [DetectionHistoryController::class, 'bulkDestroy'])->name('histories.bulk-destroy');
     Route::patch('/histories/{history}', [DetectionHistoryController::class, 'update'])->name('histories.update');
     Route::delete('/histories/{history}', [DetectionHistoryController::class, 'destroy'])->name('histories.destroy');
 });

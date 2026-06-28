@@ -15,14 +15,10 @@ const PRODUCT_HEALTHY = '/diseases/healthy.jpg';
 const PRODUCT_CURL = '/diseases/curl-virus.jpg';
 const PRODUCT_BACTERIAL = '/diseases/bacterial-spot.jpg';
 
-const TECH_1 =
-    'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=600&q=80';
-const TECH_2 =
-    'https://images.unsplash.com/photo-1592978322883-ff5b06bbb37b?auto=format&fit=crop&w=600&q=80';
-const TECH_3 =
-    'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=600&q=80';
-const TECH_4 =
-    'https://images.unsplash.com/photo-1561365452-adb940139ffa?auto=format&fit=crop&w=600&q=80';
+const TECH_1 = '/tech/tech-1.jpg';
+const TECH_2 = '/tech/tech-2.jpg';
+const TECH_3 = '/tech/tech-3.jpg';
+const TECH_4 = '/tech/tech-4.jpg';
 
 const AVATAR_1 = 'https://i.pravatar.cc/80?img=12';
 const AVATAR_2 = 'https://i.pravatar.cc/80?img=23';

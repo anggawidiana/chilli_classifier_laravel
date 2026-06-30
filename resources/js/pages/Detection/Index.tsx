@@ -70,7 +70,7 @@ export default function Index({ histories }: Props) {
         formData.append('file', file);
 
         try {
-            const apiUrl = import.meta.env.VITE_API_DETECTION_URL || 'http://localhost:8000/predict';
+            const apiUrl = import.meta.env.VITE_API_DETECTION_URL || 'http://localhost:8080/predict';
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 body: formData,

@@ -383,7 +383,7 @@ export default function Welcome() {
                                 </ul>
                             </div>
                             <div>
-                                <h4 className="text-sm font-semibold text-white">Contact Info</h4>
+                                <h4 className="text-sm font-semibold text-white">Contact Infoo</h4>
                                 <ul className="mt-4 space-y-2 text-sm text-white/70">
                                     <li>Singaraja, Bali, Indonesia</li>
                                     <li>+62 813 0000 0000</li>

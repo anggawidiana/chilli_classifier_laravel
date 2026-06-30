@@ -7,6 +7,7 @@ This application provides the user interface for interacting with the disease cl
 ## Prerequisites
 
 Before setting up the project, ensure you have the following installed:
+
 - PHP >= 8.3
 - Composer
 - Node.js & npm (or pnpm/yarn)
@@ -16,32 +17,38 @@ Before setting up the project, ensure you have the following installed:
 
 1. **Install PHP Dependencies**
    Run Composer to install all Laravel dependencies:
-   ```bash
-   composer install
-   ```
+
+    ```bash
+    composer install
+    ```
 
 2. **Set up Environment Variables**
    Copy the example `.env` file to create your local `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   Generate the application key:
-   ```bash
-   php artisan key:generate
-   ```
-   *Note: Ensure your database connection settings in the `.env` are configured correctly (by default, it uses SQLite which requires a `database/database.sqlite` file).*
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Generate the application key:
+
+    ```bash
+    php artisan key:generate
+    ```
+
+    _Note: Ensure your database connection settings in the `.env` are configured correctly (by default, it uses SQLite which requires a `database/database.sqlite` file)._
 
 3. **Database Migration**
    Run the database migrations to set up the necessary tables:
-   ```bash
-   php artisan migrate
-   ```
+
+    ```bash
+    php artisan migrate
+    ```
 
 4. **Install Node Dependencies**
    Install the frontend dependencies:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 ## Running the Application
 
@@ -52,6 +59,7 @@ composer run dev
 ```
 
 Alternatively, you can run them in separate terminal windows:
+
 ```bash
 # Terminal 1: Start Laravel Development Server
 php artisan serve
@@ -61,24 +69,28 @@ npm run dev
 ```
 
 ### Important Note on Ports (FastAPI Backend Conflict)
-By default, `php artisan serve` runs on `http://127.0.0.1:8000`. 
+
+By default, `php artisan serve` runs on `http://127.0.0.1:8000`.
 If you are also running the FastAPI backend for the ML model, it typically defaults to port `8000` as well.
 
 To avoid port conflicts, you can either:
+
 1. Run Laravel on a different port:
-   ```bash
-   php artisan serve --port=8080
-   ```
+    ```bash
+    php artisan serve --port=8000
+    ```
 2. Or change the FastAPI backend port:
-   ```bash
-   uvicorn main:app --reload --port 8001
-   ```
-Make sure to update any API endpoint URLs in your `.env` or frontend configuration to point to the correct FastAPI backend port.
+    ```bash
+    uvicorn main:app --reload --port 8001
+    ```
+    Make sure to update any API endpoint URLs in your `.env` or frontend configuration to point to the correct FastAPI backend port.
 
 ## Building for Production
 
 To build the assets for production, run:
+
 ```bash
 npm run build
 ```
+
 This will compile and minify your React components and Tailwind CSS for production use.

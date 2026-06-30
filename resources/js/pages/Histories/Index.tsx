@@ -3,6 +3,13 @@ import { Head, router } from '@inertiajs/react';
 import { Pencil, Trash2, UploadCloud, Loader2, Eye, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
     Dialog,
@@ -39,8 +46,28 @@ export default function Index({ histories }: Props) {
     const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
     const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
 
+    // ── filter kategori ────────────────────────────────────────────────────────
+    const [filterCategory, setFilterCategory] = useState<string>("all");
+    const uniqueCategories = [
+        'Bacterial Spot', 
+        'Cercospora Leaf Spot', 
+        'Curl Virus', 
+        'Healthy Leaf', 
+        'Nutrition Deficiency', 
+        'White Spot'
+    ];
+
+    const filteredHistories = filterCategory === "all"
+        ? histories
+        : histories.filter(h => {
+            const dbClass = h.predicted_class.replace(/_/g, ' ').toLowerCase();
+            const filterClass = filterCategory.replace(/_/g, ' ').toLowerCase();
+            if (filterClass === 'healthy leaf' && dbClass === 'healthy') return true;
+            return dbClass === filterClass;
+        });
+
     const selectAllRef = useRef<HTMLInputElement>(null);
-    const allSelected = histories.length > 0 && selectedIds.size === histories.length;
+    const allSelected = filteredHistories.length > 0 && selectedIds.size === filteredHistories.length;
     const someSelected = selectedIds.size > 0 && !allSelected;
 
     useEffect(() => {
@@ -48,7 +75,7 @@ export default function Index({ histories }: Props) {
     }, [someSelected]);
 
     const toggleSelectAll = () =>
-        setSelectedIds(allSelected ? new Set() : new Set(histories.map((h) => h.id)));
+        setSelectedIds(allSelected ? new Set() : new Set(filteredHistories.map((h) => h.id)));
 
     const toggleSelect = (id: number) =>
         setSelectedIds((prev) => {
@@ -123,7 +150,7 @@ export default function Index({ histories }: Props) {
         const formData = new FormData();
         formData.append('file', updateFile);
         try {
-            const apiUrl = import.meta.env.VITE_API_DETECTION_URL || 'http://localhost:8000/predict';
+            const apiUrl = import.meta.env.VITE_API_DETECTION_URL || 'http://localhost:8080/predict';
             const res = await fetch(apiUrl, { method: 'POST', body: formData });
             if (!res.ok) throw new Error('Gagal terhubung ke API Deteksi');
             const data: PredictionResult = await res.json();
@@ -149,11 +176,30 @@ export default function Index({ histories }: Props) {
         <>
             <Head title="Riwayat Deteksi" />
             <div className="flex flex-col gap-6 p-4 md:p-6">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Riwayat Deteksi</h1>
-                    <p className="text-muted-foreground mt-1 text-sm">
-                        Daftar riwayat klasifikasi penyakit daun cabai yang pernah Anda lakukan.
-                    </p>
+                <div className="flex items-center justify-between gap-4 w-full p-2">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground">Riwayat Deteksi</h1>
+                        <p className="text-muted-foreground mt-1 text-sm">
+                            Daftar riwayat klasifikasi penyakit daun cabai yang pernah Anda lakukan.
+                        </p>
+                    </div>
+                    <div>
+                        <div className="w-[200px]">
+                            <Select value={filterCategory} onValueChange={setFilterCategory}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Semua Kategori" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">Semua Kategori</SelectItem>
+                                    {uniqueCategories.map(cat => (
+                                        <SelectItem key={cat} value={cat}>
+                                            {cat}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="overflow-x-auto rounded-xl border border-sidebar-border/70 bg-background shadow-sm dark:border-sidebar-border">
@@ -191,8 +237,8 @@ export default function Index({ histories }: Props) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-sidebar-border/70 dark:divide-sidebar-border">
-                            {histories.length > 0 ? (
-                                histories.map((history, index) => {
+                            {filteredHistories.length > 0 ? (
+                                filteredHistories.map((history, index) => {
                                     const isSelected = selectedIds.has(history.id);
                                     return (
                                         <tr

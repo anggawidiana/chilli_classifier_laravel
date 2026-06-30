@@ -17,11 +17,11 @@ const TECH_2 = '/tech/tech-2.jpg';
 const TECH_3 = '/tech/tech-3.jpg';
 const TECH_4 = '/tech/tech-4.jpg';
 
-const AVATAR_1 = 'https://i.pravatar.cc/80?img=12';
-const AVATAR_2 = 'https://i.pravatar.cc/80?img=13';
-const AVATAR_3 = 'https://i.pravatar.cc/80?img=14';
-const AVATAR_4 = 'https://i.pravatar.cc/80?img=15';
-const AVATAR_5 = 'https://i.pravatar.cc/80?img=33';
+const AVATAR_1 = '/edgar.jpeg';
+const AVATAR_2 = '/edwin.png';
+const AVATAR_3 = '/sindu.jpeg';
+const AVATAR_4 = '/angga.jpg';
+const AVATAR_5 = '/MATIUS_edited.png';
 
 const BRAND = 'ChiliLab';
 

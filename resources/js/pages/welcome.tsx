@@ -55,8 +55,8 @@ export default function Welcome() {
                         <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
                             <a href="#home" className="underline-offset-4 hover:underline">Home</a>
                             <a href="#about" className="opacity-90 hover:opacity-100">About Us</a>
-                            <a href="#detection" className="opacity-90 hover:opacity-100">Smart Detection</a>
                             <a href="#diseases" className="opacity-90 hover:opacity-100">Diseases</a>
+                            <a href="#detection" className="opacity-90 hover:opacity-100">Smart Detection</a>
                             <a href="#contact" className="opacity-90 hover:opacity-100">Contact</a>
                         </nav>
 
@@ -207,7 +207,7 @@ export default function Welcome() {
                             />
                             <TabBlock
                                 title="Learn the Tech"
-                                body="Discover the convolutional neural network behind ChiliLab — and how transfer learning powers fast, accurate disease detection."
+                                body="Discover the convolutional neural network behind ChiliLab and how transfer learning powers fast, accurate disease detection."
                             />
                             <TabBlock
                                 title="Meet the Team"
@@ -387,7 +387,6 @@ export default function Welcome() {
                                 <ul className="mt-4 space-y-2 text-sm text-white/70">
                                     <li>Singaraja, Bali, Indonesia</li>
                                     <li>+62 813 0000 0000</li>
-                                    <li>08.00 AM – 18.00 PM</li>
                                     <li>support@chililab.id</li>
                                 </ul>
                             </div>

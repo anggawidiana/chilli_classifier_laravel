@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { UploadCloud, ImageIcon, Loader2, History } from 'lucide-react';
+import { UploadCloud, ImageIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,19 +12,8 @@ interface PredictionResult {
     probabilities: Record<string, number>;
 }
 
-interface DetectionHistory {
-    id: number;
-    predicted_class: string;
-    confidence: number;
-    severity_percent: number;
-    created_at: string;
-}
 
-interface Props {
-    histories: DetectionHistory[];
-}
-
-export default function Index({ histories }: Props) {
+export default function Index() {
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -230,55 +219,6 @@ export default function Index({ histories }: Props) {
                         </CardContent>
                     </Card>
                 </div>
-
-                {/* Recent history */}
-                {histories.length > 0 && (
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <div className="flex items-center gap-2">
-                                <History className="h-4 w-4 text-muted-foreground" />
-                                <CardTitle className="text-base">Riwayat Terakhir</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="p-0">
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm whitespace-nowrap">
-                                    <thead className="bg-muted/50 text-muted-foreground border-y border-sidebar-border/70 dark:border-sidebar-border">
-                                        <tr>
-                                            <th className="px-4 py-2.5 font-medium">Tanggal</th>
-                                            <th className="px-4 py-2.5 font-medium">Prediksi</th>
-                                            <th className="px-4 py-2.5 font-medium">Akurasi</th>
-                                            <th className="px-4 py-2.5 font-medium">Keparahan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-sidebar-border/70 dark:divide-sidebar-border">
-                                        {histories.slice(0, 5).map((h) => (
-                                            <tr key={h.id} className="hover:bg-muted/40 transition-colors">
-                                                <td className="px-4 py-2.5 text-muted-foreground">
-                                                    {new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(h.created_at))}
-                                                </td>
-                                                <td className="px-4 py-2.5">
-                                                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary capitalize">
-                                                        {h.predicted_class.replace('_', ' ')}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-2.5">{Number(h.confidence * 100).toFixed(2)}%</td>
-                                                <td className="px-4 py-2.5">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-secondary">
-                                                            <div className="h-full bg-destructive rounded-full" style={{ width: `${h.severity_percent}%` }} />
-                                                        </div>
-                                                        <span className="text-muted-foreground">{Number(h.severity_percent).toFixed(1)}%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
             </div>
         </>
     );

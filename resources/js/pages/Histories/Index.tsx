@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Pencil, Trash2, UploadCloud, Loader2, Eye, ImageIcon } from 'lucide-react';
+import { Pencil, Trash2, UploadCloud, Loader2, Eye, ImageIcon, ChevronUp, ChevronDown, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -57,17 +57,51 @@ export default function Index({ histories }: Props) {
         'White Spot'
     ];
 
-    const filteredHistories = filterCategory === "all"
-        ? histories
-        : histories.filter(h => {
-            const dbClass = h.predicted_class.replace(/_/g, ' ').toLowerCase();
-            const filterClass = filterCategory.replace(/_/g, ' ').toLowerCase();
-            if (filterClass === 'healthy leaf' && dbClass === 'healthy') return true;
-            return dbClass === filterClass;
-        });
+    // ── sorting ────────────────────────────────────────────────────────────────
+    type SortKey = 'created_at' | 'confidence' | 'severity_percent' | null;
+    type SortOrder = 'asc' | 'desc';
+    const [sortKey, setSortKey] = useState<SortKey>(null);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+
+    const handleSort = (key: SortKey) => {
+        if (sortKey === key) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortKey(key);
+            setSortOrder('asc');
+        }
+    };
+
+    const sortedAndFilteredHistories = useMemo(() => {
+        let result = filterCategory === "all"
+            ? [...histories]
+            : histories.filter(h => {
+                const dbClass = h.predicted_class.replace(/_/g, ' ').toLowerCase();
+                const filterClass = filterCategory.replace(/_/g, ' ').toLowerCase();
+                if (filterClass === 'healthy leaf' && dbClass === 'healthy') return true;
+                return dbClass === filterClass;
+            });
+
+        if (sortKey) {
+            result.sort((a, b) => {
+                let aVal: number | string = a[sortKey as keyof DetectionHistory] as number | string;
+                let bVal: number | string = b[sortKey as keyof DetectionHistory] as number | string;
+
+                if (sortKey === 'created_at') {
+                    aVal = new Date(a.created_at).getTime();
+                    bVal = new Date(b.created_at).getTime();
+                }
+
+                if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+        return result;
+    }, [histories, filterCategory, sortKey, sortOrder]);
 
     const selectAllRef = useRef<HTMLInputElement>(null);
-    const allSelected = filteredHistories.length > 0 && selectedIds.size === filteredHistories.length;
+    const allSelected = sortedAndFilteredHistories.length > 0 && selectedIds.size === sortedAndFilteredHistories.length;
     const someSelected = selectedIds.size > 0 && !allSelected;
 
     useEffect(() => {
@@ -75,7 +109,7 @@ export default function Index({ histories }: Props) {
     }, [someSelected]);
 
     const toggleSelectAll = () =>
-        setSelectedIds(allSelected ? new Set() : new Set(filteredHistories.map((h) => h.id)));
+        setSelectedIds(allSelected ? new Set() : new Set(sortedAndFilteredHistories.map((h) => h.id)));
 
     const toggleSelect = (id: number) =>
         setSelectedIds((prev) => {
@@ -216,10 +250,34 @@ export default function Index({ histories }: Props) {
                                     />
                                 </th>
                                 <th className="px-4 py-3 font-medium">No</th>
-                                <th className="px-4 py-3 font-medium">Tanggal Deteksi</th>
+                                <th
+                                    className="px-4 py-3 font-medium cursor-pointer hover:bg-muted/50 transition-colors select-none"
+                                    onClick={() => handleSort('created_at')}
+                                >
+                                    <div className="flex items-center gap-1.5">
+                                        Tanggal Deteksi
+                                        {sortKey === 'created_at' ? (sortOrder === 'asc' ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />}
+                                    </div>
+                                </th>
                                 <th className="px-4 py-3 font-medium">Prediksi Penyakit</th>
-                                <th className="px-4 py-3 font-medium">Akurasi Model</th>
-                                <th className="px-4 py-3 font-medium">Tingkat Keparahan</th>
+                                <th
+                                    className="px-4 py-3 font-medium cursor-pointer hover:bg-muted/50 transition-colors select-none"
+                                    onClick={() => handleSort('confidence')}
+                                >
+                                    <div className="flex items-center gap-1.5">
+                                        Akurasi Model
+                                        {sortKey === 'confidence' ? (sortOrder === 'asc' ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />}
+                                    </div>
+                                </th>
+                                <th
+                                    className="px-4 py-3 font-medium cursor-pointer hover:bg-muted/50 transition-colors select-none"
+                                    onClick={() => handleSort('severity_percent')}
+                                >
+                                    <div className="flex items-center gap-1.5">
+                                        Tingkat Keparahan
+                                        {sortKey === 'severity_percent' ? (sortOrder === 'asc' ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />) : <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />}
+                                    </div>
+                                </th>
                                 <th className="px-4 py-3">
                                     <div className="flex items-center justify-between">
                                         <span className="font-medium">Aksi</span>
@@ -237,8 +295,8 @@ export default function Index({ histories }: Props) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-sidebar-border/70 dark:divide-sidebar-border">
-                            {filteredHistories.length > 0 ? (
-                                filteredHistories.map((history, index) => {
+                            {sortedAndFilteredHistories.length > 0 ? (
+                                sortedAndFilteredHistories.map((history, index) => {
                                     const isSelected = selectedIds.has(history.id);
                                     return (
                                         <tr

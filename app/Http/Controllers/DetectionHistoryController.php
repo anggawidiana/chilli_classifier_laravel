@@ -24,7 +24,7 @@ class DetectionHistoryController extends Controller
             'predicted_class'  => 'required|string|max:255',
             'confidence'       => 'required|numeric|between:0,100',
             'severity_percent' => 'required|numeric|between:0,100',
-            'image'            => 'nullable|image|max:5120', // Max 5MB
+            'image'            => 'nullable|image|max:10240', // Max 10MB
         ]);
 
         if ($request->hasFile('image')) {

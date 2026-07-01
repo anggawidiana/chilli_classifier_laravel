@@ -10,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+import { cn, compressImage } from '@/lib/utils';
 import {
     Dialog,
     DialogContent,
@@ -159,12 +159,15 @@ export default function Index({ histories }: Props) {
         setUpdateError(null);
     };
 
+    const applyUpdateFile = async (raw: File) => {
+        const compressed = await compressImage(raw);
+        setUpdateFile(compressed);
+        setUpdatePreviewUrl(URL.createObjectURL(compressed));
+        setUpdateError(null);
+    };
+
     const handleUpdateFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.[0]) {
-            setUpdateFile(e.target.files[0]);
-            setUpdatePreviewUrl(URL.createObjectURL(e.target.files[0]));
-            setUpdateError(null);
-        }
+        if (e.target.files?.[0]) applyUpdateFile(e.target.files[0]);
     };
 
     const handleUpdateDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -172,9 +175,7 @@ export default function Index({ histories }: Props) {
         const f = e.dataTransfer.files?.[0];
         if (!f) return;
         if (!f.type.startsWith('image/')) { setUpdateError('Hanya file gambar yang diperbolehkan.'); return; }
-        setUpdateFile(f);
-        setUpdatePreviewUrl(URL.createObjectURL(f));
-        setUpdateError(null);
+        applyUpdateFile(f);
     };
 
     const handleRedetect = async () => {

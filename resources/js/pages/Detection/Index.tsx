@@ -4,6 +4,7 @@ import { UploadCloud, ImageIcon, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { compressImage } from '@/lib/utils';
 
 interface PredictionResult {
     predicted_class: string;
@@ -20,29 +21,24 @@ export default function Index() {
     const [result, setResult] = useState<PredictionResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const applyFile = async (raw: File) => {
+        const compressed = await compressImage(raw);
+        setFile(compressed);
+        setPreviewUrl(URL.createObjectURL(compressed));
+        setResult(null);
+        setError(null);
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const selectedFile = e.target.files[0];
-            setFile(selectedFile);
-            setPreviewUrl(URL.createObjectURL(selectedFile));
-            setResult(null);
-            setError(null);
-        }
+        if (e.target.files?.[0]) applyFile(e.target.files[0]);
     };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            const selectedFile = e.dataTransfer.files[0];
-            if (selectedFile.type.startsWith('image/')) {
-                setFile(selectedFile);
-                setPreviewUrl(URL.createObjectURL(selectedFile));
-                setResult(null);
-                setError(null);
-            } else {
-                setError('Hanya file gambar yang diperbolehkan.');
-            }
-        }
+        const f = e.dataTransfer.files?.[0];
+        if (!f) return;
+        if (!f.type.startsWith('image/')) { setError('Hanya file gambar yang diperbolehkan.'); return; }
+        applyFile(f);
     };
 
     const handleDetect = async () => {
